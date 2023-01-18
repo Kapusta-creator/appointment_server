@@ -37,8 +37,6 @@ target_link_libraries(client Poco::Net)
 target_link_libraries(client Poco::Util)
 target_link_libraries(client Poco::Data)
 target_link_libraries(client Poco::JSON)
-target_link_libraries(client Poco::Util)
-target_link_libraries(client Poco::XML)
 target_link_libraries(client Qt5::Core)
 
 install(TARGETS client CONFIGURATIONS Debug DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
