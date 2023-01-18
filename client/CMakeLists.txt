@@ -6,7 +6,6 @@ add_executable(client client.cpp)
 
 include(FetchContent)
 
-set(CMAKE_PREFIX_PATH "D:\\Qt\\5.15.2\\msvc2019_64")
 find_package(Qt5 COMPONENTS Core REQUIRED)
 
 FetchContent_Declare(json
