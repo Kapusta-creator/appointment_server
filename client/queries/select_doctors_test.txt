@@ -1,0 +1,18 @@
+select
+table_name:
+doctors
+fields:
+doctors.id as id,first_name,second_name,branches.name as branch,types.name as type
+join:
+branches
+INNER JOIN
+branches.id = doctors.branch_id
+end
+join:
+types
+INNER JOIN
+types.id = doctors.id
+end
+order_by:
+id
+eoq

@@ -1,0 +1,8 @@
+select
+table_name:
+cards
+fields:
+id,first_name,last_name,passport,phone_number,birthdate
+order_by:
+id
+eoq

@@ -1,0 +1,1 @@
+{"table_name": "doctors", "fields": ["doctors.id as id", "max_time", "type_id", "weekday", "begin_time", "end_time"], "conditions": [], "join": {"on": "schedules", "type": "INNER JOIN"}, "join_conditions": [["schedules.doc_id = doctors.id", "last_name = 'Максимов'"]], "order_by": "doc_id"}

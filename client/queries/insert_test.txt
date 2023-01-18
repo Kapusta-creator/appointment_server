@@ -1,0 +1,10 @@
+insert
+table_name:
+cards
+fields:
+first_name,second_name,last_name,passport,phone_number,birthdate,verified
+values:
+'Тест','Тестович','Тестов','0000 111111','+79999999999','2003-09-01',1
+'Тест2','Тестович2','Тестов2','1111 111111','+78999999999','2003-08-01',1
+end
+eoq
