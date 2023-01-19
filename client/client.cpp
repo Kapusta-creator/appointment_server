@@ -117,6 +117,7 @@ bool has_alpha(const std::string& data) {
 }
 /** @} */
 
+
 /** @defgroup process_requests
 *	@{
 */
@@ -428,20 +429,20 @@ json check_talons() {
 	resp = send_request(to_string(req), "/select", client_login, client_password);
 	logging.open("log.txt", std::ios::app);
 	print_query_time(logging);
+	logging.close();
 	QFile file("log.txt");
+	file.open(QIODevice::Append);
+	QTextStream stream(&file);
 	if (resp["status"] == "ok") {
 		std::string row;
-		QTextStream stream(&file);
 		for (auto& x : resp["data"]) {
 			stream << QString::fromUtf8("Пациент ") << to_qstr(std::string(x["patient_id"])) << " ";
-			stream << QString::fromUtf8("Записан на ") << to_qstr(std::string(x["begin_time"])) << ' ' << to_qstr(std::string(x["date"])) << QString::fromUtf8(" к доктору ") << to_qstr(std::string(x["doc_id"]));
-			logging << "\n";
+			stream << QString::fromUtf8("Записан на ") << to_qstr(std::string(x["begin_time"])) << ' ' << to_qstr(std::string(x["date"])) << QString::fromUtf8(" к доктору ") << to_qstr(std::string(x["doc_id"])) << "\n";
 		}
 	}
 	else {
-		logging << resp["status"] << "\n";
+		stream << to_qstr(resp["status"]) << "\n";
 	}
-	logging.close();
 	return resp;
 }
 
@@ -508,7 +509,9 @@ std::string print_schedules() {
 	json resp;
 	logging.open("log.txt", std::ios::app);
 	print_query_time(logging);
+	logging.close();
 	QFile file("log.txt");
+	file.open(QIODevice::Append);
 	resp = parse_func("queries/select_doc.txt")["select"][0];
 	std::string status = resp["status"];
 	if (resp["status"] == "ok") {
@@ -523,14 +526,13 @@ std::string print_schedules() {
 		for (auto& x : schedule) {
 			stream << QString::fromUtf8("Расписание доктора ") << to_qstr(x.first) << "\n";
 			for (auto& y : x.second) {
-				logging << names_of_weekdays[y[0]].toLocal8Bit().toStdString() << ", " << y[1] << ", " << y[2] << ", " << y[3] << "\n";
+				stream << names_of_weekdays[y[0]] << ", " << to_qstr(y[1]) << ", " << to_qstr(y[2]) << ", " << to_qstr(y[3]) << "\n";
 			}
 		}
 	}
 	else {
 		logging << resp["status"] << "\n";
 	}
-	logging.close();
 	return status;
 }
 
@@ -571,8 +573,13 @@ json print_talons() {
 void make_user_query(const std::string& fn) {
 	json resp;
 	resp = parse_func(fn);
+	logging.open("log.txt", std::ios::app);
 	print_query_time(logging);
-	logging << resp.dump(2) << "\n";
+	logging.close();
+	QFile file("log.txt");
+	file.open(QIODevice::Append);
+	QTextStream stream(&file);
+	stream << to_qstr(resp.dump(2)) << "\n";
 }
 /** @} */
 /** @defgroup generation_data 
@@ -693,94 +700,108 @@ int main() {
 	for (;;) {
 		std::cout << client_login << ">";
 		std::cin >> cmd;
-		if (cmd == "clear") {
-			std::cout << clear_database().dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "fill") {
-			std::cin >> days_str;
-			if (has_alpha(days_str)) {
-				std::cout << "error: wrong data\n";
-				continue;
-			}
-			str_to_int(days_str, days);
-			if (days < 0 || days > 30) {
-				std::cout << "error: count should be between 0 and 30\n";
-			}
-			else {
-				std::cout << fill_database(days).dump(2) << "\n";
-			}
-			correct_cmd = true;
-		}
-		if (cmd == "make_appointment") {
-			std::cout << parse_func("queries/make_appointment_test.txt").dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "delete") {
-			std::cout << parse_func("queries/delete_test.txt").dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "update") {
-			std::cout << parse_func("queries/update_test.txt").dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "insert") {
-			std::cout << parse_func("queries/insert_test.txt").dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "check_appointments") {
-			std::cout << check_talons().dump(2) << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "check_schedules") {
-			std::cout << print_schedules() << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "check_doctors") {
-			std::cout << print_doctors() << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "check_patients") {
-			std::cout << print_cards() << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "check_talons") {
-			std::cout << print_talons() << "\n";
-			correct_cmd = true;
-		}
-		if (cmd == "add_client") {
-			if (client_login != "admin") {
-				std::cout << "forbidden\n";
-			}
-			else {
+		if (client_login == "admin") {
+			if (cmd == "add_client") {
 				std::cout << "login: ";
 				std::cin >> login;
+				if (login == "admin") {
+					std::cout << "error: bad login\n";
+					continue;
+				}
 				std::cout << "password: ";
 				std::cin >> password;
 				std::cout << add_new_client(login, password).dump(2) << "\n";
+				correct_cmd = true;
 			}
-			correct_cmd = true;
+			if (cmd == "auth") {
+				std::cout << "login: ";
+				std::cin >> client_login;
+				std::cout << "password: ";
+				std::cin >> client_password;
+				correct_cmd = true;
+			}
+			if (!correct_cmd) {
+				std::cout << "unknown command: " << cmd << "\n";
+			}
+			correct_cmd = false;
 		}
-		if (cmd == "make_own_query") {
-			std::cin >> fn;
-			make_user_query("queries/" + fn);
-			correct_cmd = true;
+		else {
+			if (cmd == "clear") {
+				std::cout << clear_database().dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "fill") {
+				std::cin >> days_str;
+				if (has_alpha(days_str)) {
+					std::cout << "error: wrong data\n";
+					continue;
+				}
+				str_to_int(days_str, days);
+				if (days < 0 || days > 30) {
+					std::cout << "error: count should be between 0 and 30\n";
+				}
+				else {
+					std::cout << fill_database(days).dump(2) << "\n";
+				}
+				correct_cmd = true;
+			}
+			if (cmd == "make_appointment") {
+				std::cout << parse_func("queries/make_appointment_test.txt").dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "delete") {
+				std::cout << parse_func("queries/delete_test.txt").dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "update") {
+				std::cout << parse_func("queries/update_test.txt").dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "insert") {
+				std::cout << parse_func("queries/insert_test.txt").dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "check_appointments") {
+				std::cout << check_talons().dump(2) << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "check_schedules") {
+				std::cout << print_schedules() << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "check_doctors") {
+				std::cout << print_doctors() << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "check_patients") {
+				std::cout << print_cards() << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "check_talons") {
+				std::cout << print_talons() << "\n";
+				correct_cmd = true;
+			}
+			if (cmd == "make_own_query") {
+				std::cin >> fn;
+				make_user_query("queries/" + fn);
+				correct_cmd = true;
+			}
+			if (cmd == "auth") {
+				std::cout << "login: ";
+				std::cin >> client_login;
+				std::cout << "password: ";
+				std::cin >> client_password;
+				correct_cmd = true;
+			}
+			if (cmd == "delete_client") {
+				std::cout << "login: ";
+				std::cin >> login;
+				std::cout << delete_client(login).dump(2) << "\n";
+			}
+			if (!correct_cmd) {
+				std::cout << "unknown command: " << cmd << "\n";
+			}
+			correct_cmd = false;
 		}
-		if (cmd == "auth") {
-			std::cout << "login: ";
-			std::cin >> client_login;
-			std::cout << "password: ";
-			std::cin >> client_password;
-			correct_cmd = true;
-		}
-		if (cmd == "delete_client") {
-			std::cout << "login: ";
-			std::cin >> login;
-			std::cout << delete_client(login).dump(2) << "\n";
-		}
-		if (!correct_cmd) {
-			std::cout << "unknown command: " << cmd << "\n";
-		}
-		correct_cmd = false;
 	}
 }
