@@ -93,7 +93,7 @@ std::vector<std::string> split(const std::string& s, char delim) {
 void write_logs(const json& data) {
 	logging.open(log_fn, std::ios::app);
 	LocalDateTime now;
-	logging << "Запрос в " << DateTimeFormatter::format(now, "%d.%m.%y %H:%M:%S") << ":\n";
+	logging << "Query in " << DateTimeFormatter::format(now, "%d.%m.%y %H:%M:%S") << ":\n";
 	logging << data.dump(2) << "\n";
 	logging.close();
 }
@@ -106,15 +106,6 @@ void set_config() {
 	config.open("config.txt");
 	std::string data;
 	while (std::getline(config, data)) {
-		if (data == "clients_db:") {
-			std::getline(config, clients_db_name);
-		}
-		if (data == "port:") {
-			std::getline(config, data);
-			std::stringstream converter;
-			converter << data;
-			converter >> port;
-		}
 		if (data == "log_fn:") {
 			std::getline(config, data);
 			log_fn = data;
@@ -616,8 +607,8 @@ int AppointmentServer::main(const std::vector<std::string>&) {
 	setlocale(LC_ALL, "ru-RU");
 	set_config();
 	HTTPServer s(new AppRequestHandlerFactory, ServerSocket(port), new HTTPServerParams);
-	int k;
 	s.start();
+	create_new_database("create_clients.sql", "clients.db");
 	sessions.insert({ to_qstr("clients"), QSqlDatabase::addDatabase("QSQLITE", "admin")});
 	sessions[to_qstr("clients")].setDatabaseName(to_qstr(clients_db_name));
 	sessions[to_qstr("clients")].open();
