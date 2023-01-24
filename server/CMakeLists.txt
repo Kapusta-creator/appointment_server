@@ -34,12 +34,10 @@ CPMAddPackage("gh:pocoproject/poco#poco-1.12.4-release")
 
 target_link_libraries(server nlohmann_json::nlohmann_json)
 target_link_libraries(server Poco::Data)
-target_link_libraries(server Poco::DataSQLite)
 target_link_libraries(server Poco::Foundation)
 target_link_libraries(server Poco::JSON)
 target_link_libraries(server Poco::Net)
 target_link_libraries(server Poco::Util)
-target_link_libraries(server Poco::XML)
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Sql)
 
@@ -52,4 +50,3 @@ set_target_properties(server PROPERTIES
 )
 
 install(TARGETS server CONFIGURATIONS Release DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/install)
-#install(TARGETS server DESTINATION .)
