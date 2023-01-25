@@ -1,0 +1,13 @@
+select
+table_name:
+doctors
+fields:
+doctors.id as id,max_time,type_id,weekday,begin_time,end_time
+join:
+schedules
+INNER JOIN
+schedules.doc_id = doctors.id
+end
+order_by:
+doc_id
+eoq

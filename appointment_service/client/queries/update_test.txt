@@ -1,0 +1,27 @@
+update
+table_name:
+cards
+fields:
+first_name = 'Саша',passport = '1111 898989'
+conditions:
+id = 1
+end
+eoq
+update
+table_name:
+cards
+fields:
+first_name = 'Петя',passport = '1101 898989'
+conditions:
+id = 2
+end
+eoq
+update
+table_name:
+cards
+fields:
+first_name = 'Саша',passport = '1301 898989'
+conditions:
+id = 3
+end
+eoq
