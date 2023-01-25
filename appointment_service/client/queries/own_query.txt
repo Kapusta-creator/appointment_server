@@ -40,6 +40,6 @@ talons
 fields:
 status_id = 1,patient_id = 1
 conditions:
-doc_id = 1,date = '23-01-23',begin_time = '08:00:00'
+doc_id = 3,date = '14-02-23',begin_time = '9:00:00'
 end
 eoq
