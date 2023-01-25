@@ -1,9 +1,0 @@
-delete
-table_name:
-cards
-conditions:
-first_name = 'Василий'
-#
-id = 3
-end
-eoq
