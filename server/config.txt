@@ -1,0 +1,4 @@
+log_fn:
+log.txt
+admin_password:
+12345

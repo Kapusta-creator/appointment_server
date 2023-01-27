@@ -1,0 +1,45 @@
+insert
+table_name:
+branches
+fields:
+id,name
+values:
+1,'Терапия'
+2,'Хирургия' 
+3,'Отоларингология'
+end
+eoq
+
+delete
+table_name:
+cards
+conditions:
+first_name = 'Василий'
+#
+id = 3
+end
+eoq
+
+select
+table_name:
+doctors
+fields:
+doctors.id as id,max_time,type_id,weekday,begin_time,end_time
+join:
+schedules
+INNER JOIN
+schedules.doc_id = doctors.id
+end
+order_by:
+doc_id
+eoq
+
+update
+table_name:
+talons
+fields:
+status_id = 1,patient_id = 1
+conditions:
+doc_id = 3,date = '14-02-23',begin_time = '9:00:00'
+end
+eoq
