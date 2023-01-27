@@ -55,7 +55,6 @@ add_custom_command(TARGET client
 )
 endif(WIN32)
 
-
 target_link_libraries(client nlohmann_json::nlohmann_json)
 target_link_libraries(client Poco::Foundation)
 target_link_libraries(client Poco::Net)
@@ -65,5 +64,6 @@ target_link_libraries(client Poco::JSON)
 target_link_libraries(client Poco::Util)
 target_link_libraries(client Poco::XML)
 target_link_libraries(client Qt5::Core)
+
 install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/client)
 install(TARGETS client CONFIGURATIONS Debug DESTINATION ${CMAKE_INSTALL_PREFIX}/client)
