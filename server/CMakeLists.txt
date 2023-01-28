@@ -9,7 +9,7 @@ target_link_libraries(server Poco::Util)
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Core)
 target_link_libraries(server Qt${QT_VERSION_MAJOR}::Sql)
 
-install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/server)
+#install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/server)
 install(FILES create_query.sql create_clients.sql config.txt DESTINATION ${CMAKE_INSTALL_PREFIX}/server)
 if(MSVC)
 install(FILES 
