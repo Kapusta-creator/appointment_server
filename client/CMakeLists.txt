@@ -12,7 +12,7 @@ target_link_libraries(client Poco::Util)
 target_link_libraries(client Poco::XML)
 target_link_libraries(client Qt5::Core)
 
-install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/client)
+#install(DIRECTORY DESTINATION ${CMAKE_INSTALL_PREFIX}/client)
 if(MSVC)
 install(FILES 
 ${CMAKE_CURRENT_BINARY_DIR}/../bin/Debug/PocoDatad.dll 
