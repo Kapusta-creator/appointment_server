@@ -39,14 +39,15 @@ int week_days = 7;
 std::string client_login = "";
 std::string client_password = "";
 std::ofstream logging;
-std::map<std::string, QString> names_of_weekdays = { {"1", QString::fromUtf8("Понедельник")}, 
-													 {"2", QString::fromUtf8("Вторник")},
-	                                                 {"3", QString::fromUtf8("Среда")},
-	                                                 {"4", QString::fromUtf8("Четверг")},
-	                                                 {"5", QString::fromUtf8("Пятница")},
-	                                                 {"6", QString::fromUtf8("Суббота")},
-	                                                 {"7", QString::fromUtf8("Воскресенье")}
-												   };
+std::map<std::string, QString> names_of_weekdays = { 
+	{"1", QString::fromUtf8("Понедельник")}, 
+	{"2", QString::fromUtf8("Вторник")},
+	{"3", QString::fromUtf8("Среда")},
+	{"4", QString::fromUtf8("Четверг")},
+	{"5", QString::fromUtf8("Пятница")},
+	{"6", QString::fromUtf8("Суббота")},
+	{"7", QString::fromUtf8("Воскресенье")}
+};
 
 /** @defgroup support_functions
 *	@{
